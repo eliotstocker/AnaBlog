@@ -1,4 +1,4 @@
 AnaBlog
 =======
 
-A tiny MongoDB base blogging system base on backbone and handlebars
+A tiny MongoDB base blogging system based on backbone and handlebars

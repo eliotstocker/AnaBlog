@@ -10,6 +10,7 @@ namespace entries;
 
 
 use exceptions\unauthorizedException;
+use exceptions\userException;
 use users\userAuth;
 
 class operations {
@@ -17,9 +18,8 @@ class operations {
     private $_users;
 
     function __construct() {
-        include "../../settings.php";
         $storageClass = 'storage\\' . STORAGE_CLASS;
-        $this->_storage = new $storageClass(DB_USER, DB_PASSWORD, DB_HOST, DB_DATABASE, DB_BLOG_COLLECTION);
+        $this->_storage = new $storageClass();
         $this->_users = new userAuth();
     }
 
@@ -34,11 +34,13 @@ class operations {
     public function createEntry($at, $data) {
         try {
             $userID = $this->_users->verifyUser($at);
-            $entry = entryRegistration::fromArray($data);
+            $entry = entryRegistration::fromArray((array) $data);
             $entry->setUser($userID);
             $this->_storage->createEntry($entry);
-        } catch(\Exception $e) {
+        } catch(userException $e) {
             throw new unauthorizedException("Access Token Invalid");
+        } catch(\Exception $e) {
+            throw new unauthorizedException($e->getMessage());
         }
     }
 
@@ -49,8 +51,10 @@ class operations {
             $entry->setUpdate($id);
             $entry->setUser($userID);
             $this->_storage->updateEntry($entry);
-        } catch(\Exception $e) {
+        } catch(userException $e) {
             throw new unauthorizedException("Access Token Invalid");
+        } catch(\Exception $e) {
+            throw new unauthorizedException($e->getMessage());
         }
     }
 }

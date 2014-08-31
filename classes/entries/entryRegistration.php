@@ -67,20 +67,24 @@ class entryRegistration {
 
     public function setUser($u) {
         if($this->getUpdate()) {
-            $this->_entry["author"] = $u;
-        } else {
             $this->_entry["editor"] = $u;
+        } else {
+            $this->_entry["author"] = $u;
         }
     }
 
     public function getUser() {
-
+        if(isset($this->_entry["editor"])) {
+            return $this->_entry["editor"];
+        } else {
+            return $this->_entry["author"];
+        }
     }
 
     public function setTitle($t)
     {
-        if (empty($n)) {
-            throw new ClientRegistrationException("name cannot be empty");
+        if (empty($t)) {
+            throw new entryException("title cannot be empty");
         }
         $this->_entry['title'] = $t;
     }
@@ -92,8 +96,8 @@ class entryRegistration {
 
     public function setContent($c)
     {
-        if (empty($n)) {
-            throw new ClientRegistrationException("name cannot be empty");
+        if (empty($c)) {
+            throw new entryException("content cannot be empty");
         }
         $this->_entry['content'] = $c;
     }

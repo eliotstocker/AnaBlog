@@ -8,10 +8,10 @@ class mongodb {
     private $_con;
     private $_db;
 
-    function __construct($username, $password, $host, $database, $collection) {
-        $this->_con = new \MongoClient("mongodb://{$username}:{$password}@{$host}");
-        $this->_db = $this->_con->$database;
-        $this->_col = $this->_db->$collection;
+    function __construct() {
+        $this->_con = new \MongoClient("mongodb://".DB_USER.":".DB_PASSWORD."@".DB_HOST);
+        $this->_db = $this->_con->{DB_DATABASE};
+        $this->_col = $this->_db->{DB_BLOG_COLLECTION};
     }
 
     public function createEntry(entryRegistration $data) {
@@ -20,19 +20,20 @@ class mongodb {
     }
 
     public function returnEntry($id) {
-        $entry = $this->_col->findOne(array("_id" => $id));
+        $entry = $this->_col->findOne(array("_id" => new \MongoId($id)));
+        unset($entry["_id"]);
         return $entry;
     }
 
     public function updateEntry($id, entryRegistration $data) {
         if($data->getUpdate()) {
-            $this->_col->update(array("_id" => $id), $data->entryToArray());
+            $this->_col->update(array("_id" => new \MongoId($id)), $data->entryToArray());
         } else {
             throw new updateException("update request for non update data");
         }
     }
 
-    public function getLatestEntries($page = 1, $count = 10) {
+    public function getLatestEntries($page = 1, $count = 10, $auth = false) {
         if($page < 1) {
             $page = 1;
         }
@@ -43,6 +44,24 @@ class mongodb {
         $return->pages = ceil($return->count / $count);
         $return->results = array();
         foreach($entries as $entry) {
+            $entry["id"] = $entry["_id"]->{"\$id"};
+            unset($entry["_id"]);
+            if(isset($entry["editor"])) {
+                $editor = $this->getUserByID($entry["editor"]);
+                $info = array("first_name" => $editor["first_name"], "last_name" => $editor["last_name"]);
+                if($auth) {
+                    $info["id"] = $editor["_id"];
+                    $info["email"] = $editor["email"];
+                }
+                $entry["editor"] = $info;
+            }
+            $author = $this->getUserByID($entry["author"]);
+            $info = array("first_name" => $author["first_name"], "last_name" => $author["last_name"]);
+            if($auth) {
+                $info["id"] = $author["_id"];
+                $info["email"] = $author["email"];
+            }
+            $entry["author"] = $info;
             $return->results[] = $entry;
         }
         return $return;
@@ -55,7 +74,12 @@ class mongodb {
     }
 
     public function getUser($email) {
-        $user = $this->_col->findOne(array("email" => $email));
+        $user = $this->_db->{DB_USER_COLLECTION}->findOne(array("email" => $email));
         return $user;
     }
-} 
+
+    public function getUserByID($id) {
+        $user = $this->_db->{DB_USER_COLLECTION}->findOne(array("_id" => new \MongoId($id)));
+        return $user;
+    }
+}

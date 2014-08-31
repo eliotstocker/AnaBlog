@@ -5,10 +5,10 @@ function Autoloader($className) {
         $class = array_pop($className);
         $namespace = implode(DIRECTORY_SEPARATOR, $className);
         $file = $namespace . DIRECTORY_SEPARATOR . str_replace('_', DIRECTORY_SEPARATOR, $class) . '.php';
-        if(!file_exists("/www/classes/".$file)) {
+        if(!file_exists("../classes/".$file)) {
             throw new \Exception("Class Loader Exception: Class File Not Found - $file");
         }
-        require_once "/www/classes/".$file;
+        require_once "../classes/".$file;
    }
 }
 

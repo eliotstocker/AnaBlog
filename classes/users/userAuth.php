@@ -15,8 +15,8 @@ class userAuth {
     public function verifyUser($accessToken) {
         if(is_file(".access")) {
             $access = json_decode(file_get_contents(".access"));
-            if(isset($access[$accessToken])) {
-                return $access[$accessToken]->id;
+            if(isset($access->$accessToken)) {
+                return $access->$accessToken->id;
             } else {
                 throw new userException("Access Token invalid");
             }
@@ -26,20 +26,20 @@ class userAuth {
     }
 
     function login($email, $password) {
-        include "../../settings.php";
         $storageClass = 'storage\\' . STORAGE_CLASS;
-        $storage = new $storageClass(DB_USER, DB_PASSWORD, DB_HOST, DB_DATABASE, DB_BLOG_COLLECTION);
+        $storage = new $storageClass();
         $u = $storage->getUser($email);
-        $salt = $u->salt;
+        $salt = $u["salt"];
         $pwdHash = hash('sha256', $salt.md5($password));
-        if($pwdHash == $u->hash) {
+        if($pwdHash == $u["hash"]) {
             $access = array();
             if(is_file(".access")) {
                 $access = json_decode(file_get_contents(".access"));
             }
             $tokenID = $this->generateRandomString();
-            $access[$tokenID] = array("id" => $u->_id, "email" => $u->email, "accessed" => time());
+            $access[$tokenID] = array("id" => $u["_id"]->{"\$id"}, "email" => $u["email"], "accessed" => time());
             file_put_contents(".access", json_encode($access));
+            return $tokenID;
         } else {
             throw new userException("User Name or Password Invalid");
         }
@@ -59,14 +59,13 @@ class userAuth {
     }
 
     public function getUser($accessToken) {
-        include "../../settings.php";
         $storageClass = 'storage\\' . STORAGE_CLASS;
-        $storage = new $storageClass(DB_USER, DB_PASSWORD, DB_HOST, DB_DATABASE, DB_BLOG_COLLECTION);
+        $storage = new $storageClass();
 
         if(is_file(".access")) {
             $access = json_decode(file_get_contents(".access"));
             if(isset($access[$accessToken])) {
-                $email = $access[$accessToken]->email;
+                $email = $access[$accessToken]["email"];
             } else {
                 throw new userException("Access Token invalid");
             }
