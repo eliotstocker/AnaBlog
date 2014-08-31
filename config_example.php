@@ -1,0 +1,11 @@
+<?php
+
+//DB SETTINGS
+CONST STORAGE_CLASS = "mongodb";
+
+CONST DB_HOST = "127.0.0.1:12345";
+CONST DB_USER = "blogger";
+CONST DB_PASSWORD = "blogpass";
+CONST DB_DATABASE = "blog";
+CONST DB_BLOG_COLLECTION = "blog_content";
+CONST DB_ADMIN_COLLECTION = "blog_admin";
