@@ -19,9 +19,25 @@ class mongodb {
         return true;
     }
 
-    public function returnEntry($id) {
+    public function returnEntry($id, $auth = false) {
         $entry = $this->_col->findOne(array("_id" => new \MongoId($id)));
         unset($entry["_id"]);
+        if(isset($entry["editor"])) {
+            $editor = $this->getUserByID($entry["editor"]);
+            $info = array("first_name" => $editor["first_name"], "last_name" => $editor["last_name"]);
+            if($auth) {
+                $info["id"] = $editor["_id"];
+                $info["email"] = $editor["email"];
+            }
+            $entry["editor"] = $info;
+        }
+        $author = $this->getUserByID($entry["author"]);
+        $info = array("first_name" => $author["first_name"], "last_name" => $author["last_name"]);
+        if($auth) {
+            $info["id"] = $author["_id"];
+            $info["email"] = $author["email"];
+        }
+        $entry["author"] = $info;
         return $entry;
     }
 

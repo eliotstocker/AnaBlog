@@ -1,0 +1,7 @@
+<div id="header">AnaBlog by Eliot Stocker</div>
+<div id="post">
+    <h3>{{title}}</h3>
+    <h5>By {{author.first_name}} {{author.last_name}} | {{created}}</h5>
+    {{#if editor}}<small>Edited by {{editor.first_name}} {{editor.last_name}} | {{edited}}</small>{{/if}}
+    <p>{{{content}}}</p>
+</div>

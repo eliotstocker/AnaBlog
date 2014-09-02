@@ -3,10 +3,10 @@
     {{#each posts}}
         <div class="post">
             <h3>{{title}}</h3>
-            <h5>By {{author.first_name}} {{author.last_name}} | {{created}}</h5>
+            <h5>By {{author.first_name}} {{author.last_name}} | {{created_display}}</h5>
             <p>{{{content}}}</p>
-            <a href="#{{id}}">Read More...</a>
-            {{#if editor}}<small>Edited by {{editor.first_name}} {{editor.last_name}} | {{edited}}</small>{{/if}}
+            <a href="/{{id}}">Read More...</a>
+            {{#if editor}}<small>Edited by {{editor.first_name}} {{editor.last_name}} | {{updated_display}}</small>{{/if}}
         </div>
     {{/each}}
     {{#if more}}<div id="loading">Loading More Posts...</div>{{/if}}
