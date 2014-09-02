@@ -36,6 +36,7 @@ var post = Backbone.Model.extend({
 });
 
 var home = Backbone.View.extend({
+  className: "home content",
   initialize: function() {
     this.listenTo(this.collection, "reset", this.render);
   },
@@ -50,6 +51,7 @@ var home = Backbone.View.extend({
 });
 
 var postView = Backbone.View.extend({
+  className: "post content",
   initialize: function() {
     this.listenTo(this.model, "change", this.render);
   },

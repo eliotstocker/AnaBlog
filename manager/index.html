@@ -2,8 +2,24 @@
 <html>
 <head>
     <title></title>
+    <script src="../vendor/underscore/underscore-min.js" type="application/javascript"></script>
+    <script src="../vendor/jquery/dist/jquery.min.js" type="application/javascript"></script>
+    <script src="../vendor/backbone/backbone.js" type="application/javascript"></script>
+    <script src="../vendor/handlebars/handlebars.runtime.min.js" type="application/javascript"></script>
+    <script src="../vendor/momentjs/min/moment.min.js" type="application/javascript"></script>
+    <script src="scripts/main.js" type="application/javascript"></script>
 </head>
 <body>
+    <div class="menu">
+        <ul id="entries">
+            <li id="new-post">New</li>
+        </ul>
+    </div>
+    <div id="editor-content">
+        <input id="post-title" type="text" value="Title..."/>
+        <div id="post-content">
 
+        </div>
+    </div>
 </body>
 </html>
