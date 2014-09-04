@@ -7,18 +7,33 @@
     <script src="../vendor/backbone/backbone.js" type="application/javascript"></script>
     <script src="../vendor/handlebars/handlebars.runtime.min.js" type="application/javascript"></script>
     <script src="../vendor/momentjs/min/moment.min.js" type="application/javascript"></script>
+    <script src="../vendor/medium-editor/dist/js/medium-editor.min.js" type="application/javascript"></script>
+    <script src="../vendor/jquery-cookie/jquery.cookie.js" type="application/javascript"></script>
     <script src="scripts/main.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="../vendor/medium-editor/dist/css/medium-editor.css">
+    <link rel="stylesheet" href="../vendor/medium-editor/dist/css/themes/default.css">
+    <link href="manager.css" rel="stylesheet"/>
 </head>
 <body>
+    <div class="menu-toggle">&#9776;</div>
     <div class="menu">
+        <div class="title">AnaBlog</div>
         <ul id="entries">
             <li id="new-post">New</li>
         </ul>
     </div>
     <div id="editor-content">
-        <input id="post-title" type="text" value="Title..."/>
+        <input id="post-title" type="text" placeholder="Post Title..."/>
         <div id="post-content">
 
+        </div>
+    </div>
+    <div id="login">
+        <div class="box">
+            Please login<br>
+            <input type="email" id="email" placeholder="Email"/><br>
+            <input type="password" id="password" placeholder="Password"/><br>
+            <input type="submit" value="Login" id="login-btn">
         </div>
     </div>
 </body>

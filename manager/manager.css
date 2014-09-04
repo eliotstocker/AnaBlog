@@ -1,0 +1,146 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    overflow-x: hidden;
+}
+
+#login {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+}
+
+#login .box {
+    width: 300px;
+    height: 160px;
+    left: 50%;
+    top: 50%;
+    margin-top: -80px;
+    margin-left: -150px;
+    background: #FFFFFF;
+    position: absolute;
+    box-sizing: border-box;
+    padding: 25px;
+    font-weight: lighter;
+}
+
+#login .box input:focus {
+    outline: none;
+}
+
+#login .box input[type=email], #login .box input[type=password] {
+    width: 100%;
+    padding: 0;
+    border: none;
+    border-bottom: #CACACA 1px solid;
+    margin-top: 8px;
+    font-size: 15px;
+    font-weight: lighter;
+}
+
+#login .box input[type=submit] {
+    border-radius: 0;
+    border: #464646;
+    background: #515151;
+    color: #FFFFFF;
+    padding: 5px 10px;
+    margin: 10px 0 0 100px;
+}
+
+.menu {
+    transition: 0.5s;
+    width: 200px;
+    left: -200px;
+    top: 0;
+    bottom: 0;
+    position: absolute;
+    background: #111111;
+    z-index: 1;
+}
+
+.menu .title {
+    color: #FFFFFF;
+    margin: 10px 0 0 40px;
+    font-weight: lighter;
+    font-size: 25px;
+}
+
+.menu.open {
+    display: block;
+    transition: 0.5s;
+    left: 0;
+}
+
+.menu-toggle {
+    transition: 0.5s;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 40px;
+    color: #000000;
+    text-align: center;
+    z-index: 10;
+}
+
+.menu-toggle.active {
+    transition: 0.5s;
+    left: -15px;
+    color: #FFFFFF;
+}
+
+#editor-content {
+    transition: 0.5s;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    left: 0;
+}
+
+#editor-content #post-title {
+    transition: 0.5s;
+    margin-left: 60px;
+    box-sizing: border-box;
+    font-size: 30px;
+    margin-top: 5px;
+    border: none;
+    border-bottom: #CACACA 1px solid;
+}
+
+#editor-content #post-title:focus {
+    outline: none;
+}
+
+#editor-content.slide #post-title {
+    transition: 0.5s;
+    margin-left: 10px;
+}
+
+#editor-content #post-content {
+    min-height: 200px;
+    width: 100%;
+    margin-top: 15px;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+#editor-content #post-content:focus {
+    outline: none;
+}
+
+#editor-content #post-content * {
+    -webkit-appearance:none;
+}
+
+#editor-content.slide {
+    transition: 0.5s;
+    position: relative;
+    left: 200px;
+}

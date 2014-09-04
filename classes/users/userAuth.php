@@ -37,7 +37,7 @@ class userAuth {
                 $access = json_decode(file_get_contents(".access"));
             }
             $tokenID = $this->generateRandomString();
-            $access[$tokenID] = array("id" => $u["_id"]->{"\$id"}, "email" => $u["email"], "accessed" => time());
+            $access->$tokenID = array("id" => $u["_id"]->{"\$id"}, "email" => $u["email"], "accessed" => time());
             file_put_contents(".access", json_encode($access));
             return $tokenID;
         } else {
