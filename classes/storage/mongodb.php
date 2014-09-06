@@ -9,7 +9,7 @@ class mongodb {
     private $_db;
 
     function __construct() {
-        $this->_con = new \MongoClient("mongodb://".DB_USER.":".DB_PASSWORD."@".DB_HOST);
+        $this->_con = new \MongoClient("mongodb://".DB_USER.":".DB_PASSWORD."@".DB_HOST."/".DB_DATABASE);
         $this->_db = $this->_con->{DB_DATABASE};
         $this->_col = $this->_db->{DB_BLOG_COLLECTION};
     }
@@ -87,6 +87,18 @@ class mongodb {
         if($page < 1) {
             $page = 1;
         }
+        $entries = $this->_col->find()->fields("_id", "title")->limit($count)->skip(($page - 1) * $count)->sort(array("created" => true));
+        $return = new \stdClass();
+        $return->count = $entries->count();
+        $return->page = $page;
+        $return->pages = ceil($return->count / $count);
+        $return->results = array();
+        foreach($entries as $entry) {
+            $entry["id"] = $entry["_id"]->{"\$id"};
+            unset($entry["_id"]);
+            $return->results[] = $entry;
+        }
+        return $return;
     }
 
     public function getUser($email) {

@@ -30,7 +30,15 @@ function GETRequest($get) {
     global $entries;
     global $users;
     if(isset($get["post"])) {
-        echo json_encode($entries->getEntry($get["post"]));
+        $auth = false;
+        if(isset($headers["Authorization"])) {
+            $users->verifyUser($headers["Authorization"]);
+            $auth = true;
+        } elseif(isset($headers["authorization"])) {
+            $users->verifyUser($headers["authorization"]);
+            $auth = true;
+        }
+        echo json_encode($entries->getEntry($get["post"], $auth));
     } elseif(isset($get["logout"]) && $get["logout"] == "true") {
         if(isset($headers["Authorization"])) {
             $users->logout($headers["Authorization"]);
@@ -45,7 +53,15 @@ function GETRequest($get) {
         if(isset($get["page"])) {
             $page = $get["page"];
         }
-        echo json_encode($entries->getEntries($page));
+        if(isset($headers["Authorization"])) {
+            $users->verifyUser($headers["Authorization"]);
+            echo json_encode($entries->listEntries($page));
+        } elseif(isset($headers["authorization"])) {
+            $users->verifyUser($headers["authorization"]);
+            echo json_encode($entries->listEntries($page));
+        } else {
+            echo json_encode($entries->getEntries($page));
+        }
     }
 }
 

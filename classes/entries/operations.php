@@ -27,8 +27,12 @@ class operations {
         return $this->_storage->getLatestEntries($page);
     }
 
-    public function getEntry($id) {
-        return $this->_storage->returnEntry($id);
+    public function getEntry($id, $auth = false) {
+        return $this->_storage->returnEntry($id, $auth);
+    }
+
+    public function listEntries($page) {
+        return $this->_storage->listEntries($page);
     }
 
     public function createEntry($at, $data) {
