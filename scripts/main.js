@@ -29,7 +29,7 @@ var post = Backbone.Model.extend({
   parse: function(resp) {
     resp.created_display = moment(resp.created * 1000).format("ddd, Do MMM YYYY h:mmA");
     if(resp.updated != undefined) {
-      resp.updated_display = moment(resp.updated * 1000).format("ddd, Do MMM YYYY hA");
+      resp.updated_display = moment(resp.updated * 1000).format("ddd, Do MMM YYYY h:mmA");
     }
     return resp;
   }

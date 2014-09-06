@@ -60,12 +60,28 @@ body, html {
     bottom: 0;
     position: absolute;
     background: #111111;
+    color: #FFFFFF;
     z-index: 1;
+}
+
+.menu ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.menu .menu-item {
+    padding-left: 10px;
+}
+
+.menu .menu-item.active {
+    padding-left: 6px;
+    border-left: 4px solid #CCCCCC;
 }
 
 .menu .title {
     color: #FFFFFF;
-    margin: 10px 0 0 40px;
+    margin: 10px 0 12px 40px;
     font-weight: lighter;
     font-size: 25px;
 }
@@ -112,6 +128,11 @@ body, html {
     margin-top: 5px;
     border: none;
     border-bottom: #CACACA 1px solid;
+}
+
+#editor-content #post-info {
+    padding: 3px 10px;
+    height: 20px;
 }
 
 #editor-content #post-title:focus {

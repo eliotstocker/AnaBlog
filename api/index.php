@@ -29,6 +29,7 @@ try {
 function GETRequest($get) {
     global $entries;
     global $users;
+    global $headers;
     if(isset($get["post"])) {
         $auth = false;
         if(isset($headers["Authorization"])) {
@@ -89,6 +90,7 @@ function POSTRequest($post, $get) {
 
 function PUTRequest($put, $get) {
     global $entries;
+    global $headers;
     $data = json_decode($put);
     if(isset($headers["Authorization"])) {
         $entries->saveEntry($headers["Authorization"], $get["id"], $data);

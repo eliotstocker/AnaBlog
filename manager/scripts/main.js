@@ -1,17 +1,128 @@
+var urlRoot = "http://localhost:63342/AnaBlog/";
+var pageTitle = "AnaBlog";
+
+$.ajaxSetup({
+  headers: {
+    "Authorization": $.cookie('access_token')
+  },
+  statusCode: {
+    401: function() {
+      showLogin();
+    }
+  }
+});
+
+var posts = Backbone.Collection.extend({
+  page: 1,
+  url: function() {
+    if(this.page < 2) {
+      return urlRoot+"api/";
+    } else {
+      return urlRoot+"api/?page="+this.page;
+    }
+  },
+  parse: function(resp) {
+    this.page = resp.page;
+    this.pages = resp.pages;
+    this.count = resp.count;
+    resp = resp.results;
+    return resp;
+  },
+  model: function(attrs, options) {
+    return new post(attrs, options);
+  }
+});
+
 var post = Backbone.Model.extend({
-  url: "../api/"
+  url: function() {
+    return "../api/?post="+this.id;
+  },
+  parse: function(resp) {
+    if(resp.created != undefined) {
+      resp.created_display = moment(resp.created * 1000).format("ddd, Do MMM YYYY h:mmA");
+    }
+    if(resp.updated != undefined) {
+      resp.updated_display = moment(resp.updated * 1000).format("ddd, Do MMM YYYY h:mmA");
+    }
+    return resp;
+  }
+});
+
+var postView = Backbone.View.extend({
+  initialize: function() {
+    this.listenTo(this.model, "change", this.render);
+  },
+  render: function() {
+    if(this.model.isNew()) {
+      $("#post-title").val("");
+      $("#post-content").empty();
+      $("#post-info").empty();
+    } else {
+      $("#post-title").val(this.model.toJSON().title);
+      $("#post-content").html(this.model.toJSON().content);
+      $("#post-info").text("Posted on " + this.model.toJSON().created_display + " by " + this.model.toJSON().author.first_name + " " + this.model.toJSON().author.last_name);
+    }
+    if(editor) {
+      editor.setup();
+    }
+  }
+});
+
+var menuView = Backbone.View.extend({
+  initialize: function() {
+    this.listenTo(this.collection, "reset", this.render);
+    this.listenTo(this.collection, "add", this.render);
+  },
+  render: function() {
+    $("#entries").empty();
+    _(this.collection.models).each(this.renderItem);
+  },
+  renderItem: function(m) {
+    var item = $("<li class=\"menu-item\" id=\""+ m.toJSON().id+"\">"+ m.toJSON().title+"</li>");
+    $("#entries").append(item);
+    item.click(function() {
+      pv = new postView({model: m});
+      $(".menu .active").removeClass("active");
+      item.addClass("active");
+      m.fetch();
+      pv.render();
+    });
+  }
 });
 
 $(window).resize(resize);
+var pv;
+var mv;
+var editor;
 $(function() {
   if($.cookie('access_token') == undefined) {
     showLogin();
+  } else {
+    startApp();
   }
-
+  editor = new MediumEditor('#post-content');
   $(".menu-toggle").click(slideMenu);
-  var editor = new MediumEditor('#post-content');
   resize();
 });
+
+function startApp() {
+  $("#login").hide();
+  var Post = new post();
+  pv = new postView({model: Post});
+  pv.render();
+
+  var Posts = new posts();
+  mv = new menuView({collection: Posts});
+  Posts.fetch({reset: true});
+
+  $(".new").click(function() {
+    var Post = new post();
+    pv = new postView({model: Post});
+    pv.render();
+    $(".menu .active").removeClass("active");
+    $(".new").addClass("active");
+  });
+}
 
 function slideMenu(e) {
   e.preventDefault && e.preventDefault();
@@ -42,6 +153,7 @@ function showLogin() {
       dataType: "json",
       success: function(json) {
         $.cookie('access_token', json.access_token);
+        startApp();
       },
       error: function() {
         console.log("error");
