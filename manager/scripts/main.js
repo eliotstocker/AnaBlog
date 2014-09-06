@@ -35,7 +35,10 @@ var posts = Backbone.Collection.extend({
 
 var post = Backbone.Model.extend({
   url: function() {
-    return "../api/?post="+this.id;
+    return urlRoot+"api/?post="+this.id;
+  },
+  saveUrl: function() {
+    return urlRoot+"api/"
   },
   parse: function(resp) {
     if(resp.created != undefined) {
@@ -45,6 +48,15 @@ var post = Backbone.Model.extend({
       resp.updated_display = moment(resp.updated * 1000).format("ddd, Do MMM YYYY h:mmA");
     }
     return resp;
+  },
+  sync: function(method, model, options) {
+    options = options || {};
+    if(method.toLowerCase() == "read") {
+      options.url = this.url();
+    } else {
+      options.url = this.saveUrl();
+    }
+    return Backbone.sync.apply(this, arguments);
   }
 });
 
@@ -57,11 +69,17 @@ var postView = Backbone.View.extend({
       $("#post-title").val("");
       $("#post-content").empty();
       $("#post-info").empty();
+      $("#save").val("Save");
     } else {
       $("#post-title").val(this.model.toJSON().title);
       $("#post-content").html(this.model.toJSON().content);
       $("#post-info").text("Posted on " + this.model.toJSON().created_display + " by " + this.model.toJSON().author.first_name + " " + this.model.toJSON().author.last_name);
+      $("#save").val("Update");
     }
+    var _this = this;
+    $("#save").click(function() {
+      _this.model.save();
+    });
     if(editor) {
       editor.setup();
     }
@@ -164,5 +182,5 @@ function showLogin() {
 
 function resize() {
   var w = $(window).width();
-  $("#post-title").width(w - 70);
+  $("#post-title").width(w - 70 - 60);
 }
