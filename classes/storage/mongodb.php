@@ -15,8 +15,9 @@ class mongodb {
     }
 
     public function createEntry(entryRegistration $data) {
-        $this->_col->insert($data->entryToArray());
-        return true;
+        $insert = $data->entryToArray();
+        $this->_col->insert($insert);
+        return $insert["_id"]->{"\$id"};
     }
 
     public function returnEntry($id, $auth = false) {

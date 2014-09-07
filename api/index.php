@@ -78,13 +78,13 @@ function POSTRequest($post, $get) {
         echo json_encode(array("access_token" => $users->login($data->email, $data->password), "type" => "Authorization"));
     } else {
         if(isset($headers["Authorization"])) {
-            $entries->createEntry($headers["Authorization"], $data);
+            $id = $entries->createEntry($headers["Authorization"], $data);
         } elseif(isset($headers["authorization"])) {
-            $entries->createEntry($headers["authorization"], $data);
+            $id = $entries->createEntry($headers["authorization"], $data);
         } else {
             throw new \exceptions\unauthorizedException("Access Token not Found");
         }
-        echo json_encode(array("success" => true));
+        echo json_encode(array("id" => $id));
     }
 }
 
