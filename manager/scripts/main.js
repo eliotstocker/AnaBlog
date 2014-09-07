@@ -63,6 +63,7 @@ var post = Backbone.Model.extend({
 var postView = Backbone.View.extend({
   initialize: function() {
     this.listenTo(this.model, "change", this.render);
+    _.bindAll(this, 'render', 'attachListeners');
   },
   render: function() {
     if(this.model.isNew()) {
@@ -77,12 +78,23 @@ var postView = Backbone.View.extend({
       $("#save").val("Update");
     }
     var _this = this;
+    $("#save").off('click');
     $("#save").click(function() {
       _this.model.save();
     });
-    if(editor) {
+    /*if(editor) {
       editor.setup();
-    }
+    }*/
+    this.attachListeners();
+  },
+  attachListeners: function() {
+    var _this = this;
+    $("#post-title").off("keyup").keyup(function() {
+      _this.model.set({title: $("#post-title").val()}, { "silent": true });
+    });
+    $("#post-content").off("input").on('input', function() {
+      _this.model.set({content: $("#post-content").html()}, { "silent": true });
+    });
   }
 });
 
@@ -170,7 +182,7 @@ function showLogin() {
       data: JSON.stringify(data),
       dataType: "json",
       success: function(json) {
-        $.cookie('access_token', json.access_token);
+        $.cookie('access_token', json.access_token, {expires: 365});
         startApp();
       },
       error: function() {

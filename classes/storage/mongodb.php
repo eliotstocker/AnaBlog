@@ -26,7 +26,7 @@ class mongodb {
             $editor = $this->getUserByID($entry["editor"]);
             $info = array("first_name" => $editor["first_name"], "last_name" => $editor["last_name"]);
             if($auth) {
-                $info["id"] = $editor["_id"];
+                $info["id"] = $editor["_id"]->{"\$id"};
                 $info["email"] = $editor["email"];
             }
             $entry["editor"] = $info;
@@ -34,7 +34,7 @@ class mongodb {
         $author = $this->getUserByID($entry["author"]);
         $info = array("first_name" => $author["first_name"], "last_name" => $author["last_name"]);
         if($auth) {
-            $info["id"] = $author["_id"];
+            $info["id"] = $author["_id"]->{"\$id"};
             $info["email"] = $author["email"];
         }
         $entry["author"] = $info;
@@ -53,7 +53,7 @@ class mongodb {
         if($page < 1) {
             $page = 1;
         }
-        $entries = $this->_col->find()->limit($count)->skip(($page - 1) * $count)->sort(array("created" => true));
+        $entries = $this->_col->find()->limit($count)->skip(($page - 1) * $count)->sort(array("created" => -1));
         $return = new \stdClass();
         $return->count = $entries->count();
         $return->page = $page;
@@ -87,7 +87,7 @@ class mongodb {
         if($page < 1) {
             $page = 1;
         }
-        $entries = $this->_col->find()->fields(array("_id" => true, "title"=> true))->limit($count)->skip(($page - 1) * $count)->sort(array("created" => true));
+        $entries = $this->_col->find()->fields(array("_id" => true, "title"=> true))->limit($count)->skip(($page - 1) * $count)->sort(array("created" => -1));
         $return = new \stdClass();
         $return->count = $entries->count();
         $return->page = $page;

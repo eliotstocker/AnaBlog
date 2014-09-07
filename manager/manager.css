@@ -54,6 +54,10 @@ body, html {
 
 #save {
     width: 60px;
+    border: 1px solid #CACACA;
+    background: none;
+    height: 27px;
+    margin: 0 0 0 4px;
 }
 
 .menu {
